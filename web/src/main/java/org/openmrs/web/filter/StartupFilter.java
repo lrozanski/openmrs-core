@@ -220,16 +220,18 @@ public abstract class StartupFilter implements Filter {
 	        throws IOException {
 		// first we should get velocity tools context for current client request (within
 		// his http session) and merge that tools context with basic velocity context
+		if (referenceMap == null) {
+			return;
+		}
+
 		Object locale = referenceMap.get(FilterUtil.LOCALE_ATTRIBUTE);
 		ToolContext toolContext = getToolContext(locale != null ? locale.toString() : Context.getLocale().toString());
-		VelocityContext velocityContext = new VelocityContext(toolContext);
-		
-		if (referenceMap != null) {
-			for (Map.Entry<String, Object> entry : referenceMap.entrySet()) {
-				velocityContext.put(entry.getKey(), entry.getValue());
-			}
+		VelocityContext velocityContext = new VelocityContext(toolContext);;
+
+		for (Map.Entry<String, Object> entry : referenceMap.entrySet()) {
+			velocityContext.put(entry.getKey(), entry.getValue());
 		}
-		
+
 		Object model = getModel();
 		
 		// put each of the private varibles into the template for convenience

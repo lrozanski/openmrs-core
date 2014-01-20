@@ -107,12 +107,13 @@ public class ConceptReferenceTermFormController {
 			if (mappedTermIds == null)
 				mappedTermIds = new HashSet<Integer>();
 			ConceptReferenceTermMap map = conceptReferenceTermModel.getTermMaps().get(x);
-			
-			//skip past this mapping because its term is already in use by another mapping for this term
-			if (map.getTermB() != null && !mappedTermIds.add(map.getTermB().getConceptReferenceTermId()))
-				continue;
-			
+
 			if (map != null && map.getTermB() != null) {
+				//skip past this mapping because its term is already in use by another mapping for this term
+				if (!mappedTermIds.add(map.getTermB().getConceptReferenceTermId())) {
+					continue;
+				}
+
 				if (request.getParameter("_termMaps[" + x + "].exists") == null) {
 					// because of the _termMap[x].exists input name in the jsp, the value will be null for
 					// deleted maps, remove the map.
